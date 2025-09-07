@@ -23,69 +23,141 @@ class _AskDoubtPageState extends State<AskDoubtPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[50], // student-friendly vibe
       appBar: AppBar(
-        title: const Text("Ask a Doubt",
-        style: TextStyle(
-          fontSize: 20,
-        ),),
-        backgroundColor: Colors.blueGrey,
+        title: const Text(
+          "Ask a Doubt",
+          style: TextStyle(fontSize: 20),
+        ),
+        backgroundColor: Colors.indigo,
+        centerTitle: true,
+        elevation: 2,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("Subject", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-
-              // Dropdown for subject
-              DropdownButtonFormField<String>(
-                value: subject,
-                items: subjects.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                onChanged: (value) => setState(() => subject = value),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Select subject",
-                ),
-                validator: (value) => value == null ? "Please select a subject" : null,
-              ),
               const SizedBox(height: 20),
 
-              const Text("Your Doubt", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              // Student doubt icon
+              Icon(Icons.help_outline, size: 90, color: Colors.indigo),
+              const SizedBox(height: 16),
+
+              const Text(
+                "Got a question?",
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 8),
 
-              // Doubt text area
+              const Text(
+                "Don’t worry! Ask your doubt below and get it resolved.",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 40),
+
+              // Subject field
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Subject",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.indigo[900],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              DropdownButtonFormField<String>(
+                value: subject,
+                items: subjects
+                    .map((s) => DropdownMenuItem(
+                  value: s,
+                  child: Text(s),
+                ))
+                    .toList(),
+                onChanged: (value) => setState(() => subject = value),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "Select subject",
+                ),
+                validator: (value) =>
+                value == null ? "Please select a subject" : null,
+              ),
+              const SizedBox(height: 24),
+
+              // Doubt field
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Your Doubt",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.indigo[900],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+
               TextFormField(
                 maxLines: 5,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                   hintText: "Type your doubt here...",
+                  prefixIcon: const Icon(Icons.edit_note),
                 ),
                 onChanged: (value) => doubt = value,
-                validator: (value) => value == null || value.isEmpty ? "Please enter your doubt" : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? "Please enter your doubt"
+                    : null,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
 
               // Submit button
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(200, 50),
-                    backgroundColor: Colors.blueGrey,
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo,
+                  minimumSize: const Size(double.infinity, 55),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // TODO: Send doubt to backend / Firestore / database
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Doubt submitted successfully ✅")),
-                      );
-                      Navigator.pop(context); // Go back to profile/home
-                    }
-                  },
-                  child: const Text("Submit Doubt", style: TextStyle(fontSize: 18, color: Colors.white)),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
+                icon: const Icon(Icons.send),
+                label: const Text("Submit Doubt"),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // TODO: Send doubt to backend / Firestore / database
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Doubt submitted successfully ✅"),
+                      ),
+                    );
+                    Navigator.pop(context); // Go back after submit
+                  }
+                },
               ),
             ],
           ),

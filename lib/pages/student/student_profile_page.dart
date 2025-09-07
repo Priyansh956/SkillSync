@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/github_heatmap.dart';
-import '../../widgets/badge_grid.dart';
-import '../../services/badge_service.dart';
-import '../../models/app_badge.dart';
+// removed badge imports
 import 'package:proj/pages/student/ask_a_doubt.dart';
-
-
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -14,46 +10,93 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Example streak count (replace with real tracker later)
     final int currentStreak = 120;
-    final earnedBadges = BadgeService().getBadgesForStreak(currentStreak);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        title: const Text("Profile", style: TextStyle(color: Colors.yellow)),
-        backgroundColor: Colors.blueGrey,
+        title: const Text("Profile"),
+        centerTitle: true,
+        backgroundColor: Colors.indigo,
+        elevation: 2,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🔥 Streak
-            const Text("🔥 Streak",
-                style: TextStyle(fontSize: 22, color: Colors.black)),
-            const SizedBox(height: 12),
-            SizedBox(height: 200, child:  StreakHeatmap()),
-
-            const SizedBox(height: 24),
-
-            // 🏅 Badges
-            // const Text("🏅 Earned Badges",
-            //     style: TextStyle(fontSize: 22, color: Colors.white)),
-            // const SizedBox(height: 12),
-            // BadgeGrid(badges: earnedBadges),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(200, 50),
-                backgroundColor: Colors.teal,
+            // Profile Header
+            Center(
+              child: Column(
+                children: const [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.indigo,
+                    child: Icon(Icons.person, size: 60, color: Colors.white),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    "Student Name",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Text(
+                    "Lifelong Learner 📚",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AskDoubtPage()),
-                );
-              },
-              child: const Text("Ask a Doubt", style: TextStyle(fontSize: 18)),
             ),
+            const SizedBox(height: 30),
 
+            // 🔥 Streak Section
+            const Text(
+              "🔥 Learning Streak",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(height: 200, child: StreakHeatmap()),
+            const SizedBox(height: 30),
+
+            // Ask a Doubt Button
+            Center(
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(220, 55),
+                  backgroundColor: Colors.teal,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 4,
+                ),
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AskDoubtPage()),
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Your doubt has been submitted ✅"),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.help_outline, color: Colors.white),
+                label: const Text(
+                  "Ask a Doubt",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
           ],
         ),
       ),
